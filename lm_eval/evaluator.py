@@ -667,7 +667,7 @@ def evaluate(
             if log_samples:
                 # for task_name, task_samples in list(samples.items()):
                 full_samples = [None] * WORLD_SIZE if RANK == 0 else None
-                torch.distributed.gather_object(
+                lm.accelerator.gather_object(
                     obj=task_output.logged_samples,
                     object_gather_list=full_samples,
                     dst=0,
@@ -681,7 +681,7 @@ def evaluate(
             # then collect metrics across all ranks
             for metrics in task_output.sample_metrics:
                 metric_list = [None] * WORLD_SIZE if RANK == 0 else None
-                torch.distributed.gather_object(
+                lm.accelerator.gather_object(
                     obj=task_output.sample_metrics[metrics],
                     object_gather_list=metric_list,
                     dst=0,
